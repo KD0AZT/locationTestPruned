@@ -9,16 +9,20 @@
 
 @implementation DistanceCalculator
 
+float meterToMile = 0.000621;  // Conversion for meters to miles
+
 -(float)getStraightTripDistance:(NSMutableArray*)locationHistory withCurrentLocation:(CLLocation *)currentLocation {
     
     if ([locationHistory count] < 1) {
         return -1.00;
     }
     
-    return [currentLocation distanceFromLocation:[locationHistory firstObject]];
+    return [currentLocation distanceFromLocation:[locationHistory firstObject]] * meterToMile;
 }
 
 -(float)getAccurateTripDistance:(NSMutableArray *)locationHistory {
+    
+    _accurateDist = 0.00;
     
     if ([locationHistory count] < 1) {
         return -1.00;
@@ -30,7 +34,7 @@
         }
     }
     
-    return _accurateDist;
+    return _accurateDist * meterToMile;
 }
 
 -(float)getLastDistance:(NSMutableArray *)locationHistory withCurrentLocation:(CLLocation *)currentLocation {
@@ -38,7 +42,7 @@
         return -1.00;
     }
     
-    return [currentLocation distanceFromLocation:[locationHistory lastObject]];
+    return [currentLocation distanceFromLocation:[locationHistory lastObject]] * meterToMile;
 }
 
 -(void)clearDist {

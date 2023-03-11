@@ -43,7 +43,7 @@
 //        _avgSpeed = _avgSpeed / (float)[[_locationHistoryManager getLocationHistory] count];
 //    }
     _avgSpeed = [_currentLocation speed];
-    [_speedLabel setText: [NSString stringWithFormat:@"Current Speed: %0.2f MPH", _avgSpeed * 0.62137119]];
+    [_speedLabel setText: [NSString stringWithFormat:@"Current Speed: %d MPH", (int)(_avgSpeed * 2.237)]];
     [_locationHistoryManager addLocationHistory:_currentLocation];
     [TripDetection addLocationToTrip:_currentLocation];
 }
@@ -186,7 +186,7 @@
     if(_locationManager == nil) {
         _locationManager = [CLLocationManager new];
         _locationManager.delegate = self;
-        _locationManager.distanceFilter = 10.00;
+        _locationManager.distanceFilter = kCLDistanceFilterNone;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     }
     [_locationManager requestWhenInUseAuthorization];
