@@ -11,7 +11,7 @@
 
 float meterToMile = 0.000621;  // Conversion for meters to miles
 
--(float)getStraightTripDistance:(NSMutableArray*)locationHistory withCurrentLocation:(CLLocation *)currentLocation {
+-(CLLocationDistance)getStraightTripDistance:(NSMutableArray*)locationHistory withCurrentLocation:(CLLocation *)currentLocation {
     
     if ([locationHistory count] < 1) {
         return -1.00;
@@ -20,7 +20,7 @@ float meterToMile = 0.000621;  // Conversion for meters to miles
     return [currentLocation distanceFromLocation:[locationHistory firstObject]] * meterToMile;
 }
 
--(float)getAccurateTripDistance:(NSMutableArray *)locationHistory {
+-(CLLocationDistance)getAccurateTripDistance:(NSMutableArray *)locationHistory {
     
     _accurateDist = 0.00;
     
@@ -30,14 +30,18 @@ float meterToMile = 0.000621;  // Conversion for meters to miles
         return -0.50;
     } else {
         for (int i = 0; i < [locationHistory count] - 2; i++) {
-            _accurateDist += ([[locationHistory objectAtIndex:i] distanceFromLocation:[locationHistory objectAtIndex:i + 1]]);
+            CLLocation *lastPoint = [locationHistory objectAtIndex:i];
+            CLLocation *nextPoint = [locationHistory objectAtIndex:i + 1];
+            if ([lastPoint distanceFromLocation:nextPoint] > 0) {
+                _accurateDist += ([lastPoint distanceFromLocation:nextPoint]);
+            }
         }
     }
     
     return _accurateDist * meterToMile;
 }
 
--(float)getLastDistance:(NSMutableArray *)locationHistory withCurrentLocation:(CLLocation *)currentLocation {
+-(CLLocationDistance)getLastDistance:(NSMutableArray *)locationHistory withCurrentLocation:(CLLocation *)currentLocation {
     if ([locationHistory count] < 1) {
         return -1.00;
     }

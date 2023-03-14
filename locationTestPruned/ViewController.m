@@ -95,7 +95,7 @@
     [_distanceLabel setText:@"Distance Cleared"];
     [_distanceCalculatorManager clearDist];
     _avgSpeed = 0.00;
-    [_speedLabel setText:[NSString stringWithFormat:@"Current Speed: %0.2f MPH", _avgSpeed * 0.62137119]];
+    [_speedLabel setText:[NSString stringWithFormat:@"Current Speed: %d MPH", (int)(_avgSpeed * 0.62137119)]];
 }
 
 -(void)viewDidLoad {
@@ -111,6 +111,39 @@
     [_geocoderManager initGeocoder];
     _hasGotAddress = false;
     _avgSpeed = 0.00;
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge | UNAuthorizationOptionSound | UNAuthorizationOptionAlert)
+                          completionHandler:^(BOOL granted, NSError *_Nullable error) {
+        if(!error) {
+            NSLog(@"Request Succeeded");
+        } else {
+            NSLog(@"Request Failed");
+        }
+    }];
+    
+    NSDate *now = [NSDate date];
+    now = [NSDate dateWithTimeIntervalSinceNow:10];
+    NSLog(@"NSDate: %@", now);
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    [calendar setTimeZone:[NSTimeZone localTimeZone]];
+    NSDateComponents *components = [calendar components:NSCalendarUnitDay|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond|NSCalendarUnitTimeZone fromDate:now];
+    UNMutableNotificationContent *notifContent = [[UNMutableNotificationContent alloc] init];
+    notifContent.title = [NSString localizedUserNotificationStringForKey:@"Notice" arguments:nil];
+    notifContent.body = [NSString localizedUserNotificationStringForKey:@"Shit's Bitchin" arguments:nil];
+    notifContent.sound = [UNNotificationSound defaultSound];
+    notifContent.badge = @([[UIApplication sharedApplication] applicationIconBadgeNumber] + 1);
+    UNCalendarNotificationTrigger *trigger = [UNCalendarNotificationTrigger triggerWithDateMatchingComponents:components repeats:NO];
+    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"Hella" content:notifContent trigger:trigger];
+    [center addNotificationRequest:request withCompletionHandler:^(NSError *_Nullable error) {
+        if(!error) {
+            NSLog(@"Notification Success");
+        } else {
+            NSLog(@"Notification Failed");
+        }
+    }];
+    
     
     // Label to show the current location (City, Zip, Country)
     _locationLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, -150, self.view.frame.size.width, self.view.frame.size.height)];
@@ -186,7 +219,7 @@
     if(_locationManager == nil) {
         _locationManager = [CLLocationManager new];
         _locationManager.delegate = self;
-        _locationManager.distanceFilter = kCLDistanceFilterNone;
+        _locationManager.distanceFilter = 5.00;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
     }
     [_locationManager requestWhenInUseAuthorization];

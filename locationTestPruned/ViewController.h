@@ -11,6 +11,7 @@
 #import "LocationHistory.h"
 #import "DistanceCalculator.h"
 #import "Geocoder.h"
+#import <UserNotifications/UserNotifications.h>
 
 @interface ViewController : UIViewController { }
 

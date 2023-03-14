@@ -12,19 +12,19 @@
 
 // Get the first and last locations from location history
 // and calculatre the stright-line distance between them.
--(float)getStraightTripDistance:(NSMutableArray *)locationHistory withCurrentLocation:(CLLocation *)currentLocation;
+-(CLLocationDistance)getStraightTripDistance:(NSMutableArray *)locationHistory withCurrentLocation:(CLLocation *)currentLocation;
 
 // Calculate an accurate trip distance
--(float)getAccurateTripDistance:(NSMutableArray *)locationHistory;
+-(CLLocationDistance)getAccurateTripDistance:(NSMutableArray *)locationHistory;
 
 // Calculate the distance between the last two location points (one distance)
--(float)getLastDistance:(NSMutableArray *)locationHistory withCurrentLocation:(CLLocation *)currentLocation;
+-(CLLocationDistance)getLastDistance:(NSMutableArray *)locationHistory withCurrentLocation:(CLLocation *)currentLocation;
 
 // Clear the distance calculated
 -(void)clearDist;
 
 @property (strong, nonatomic) CLLocation *startPoint;
 @property (strong, nonatomic) CLLocation *endPoint;
-@property float accurateDist;
+@property CLLocationDistance accurateDist;
 
 @end
